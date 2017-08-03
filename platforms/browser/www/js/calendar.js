@@ -1,3 +1,10 @@
+/*
+
+Filename: calendar.js
+Code source: Web Code Geeks(https://www.webcodegeeks.com/javascript/javascript-calendar-example/)
+
+*/
+
 function displayCalendar(){
 
 
@@ -77,10 +84,10 @@ function displayCalendar(){
 
 
     // building the calendar html body.
-    var calendarBody = "<table class='calendar'> <tr class='monthNow'><th colspan='7'>"
+    var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'>"
         +monthNames[month]+" "+ year +"</th></tr>";
-    calendarBody +="<tr class='dayNames'>  <td>Sun</td>  <td>Mon</td> <td>Tues</td>"+
-        "<td>Wed</td> <td>Thurs</td> <td>Fri</td> <td>Sat</td> </tr>";
+    calendarBody +="<tr>  <td class='dayNames'>Sun</td class='dayNames'>  <td class='dayNames'>Mon</td> <td class='dayNames'>Tue</td>"+
+        "<td class='dayNames'>Wed</td class='dayNames'> <td class='dayNames'>Thu</td> <td class='dayNames'>Fri</td> <td class='dayNames'>Sat</td> </tr>";
     calendarBody += "<tr>";
     calendarBody += htmlContent;
     calendarBody += "</tr></table>";

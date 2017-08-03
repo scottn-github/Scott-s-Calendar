@@ -1,0 +1,14 @@
+
+Uses:
+
+JQuery(jquery-1.12.4.min.js) 
+
+JQuery Mobile(jquery.mobile-1.4.5.min.js)
+(jquery.mobile-1.4.5.min.css)
+
+Adobe Cordova
+
+
+Code from: 
+
+Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-calendar-example/)

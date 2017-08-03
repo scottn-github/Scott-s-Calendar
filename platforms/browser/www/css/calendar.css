@@ -1,34 +1,48 @@
+/*
+
+Filename: calendar.css
+Code source: Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-calendar-example/)
+
+*/
+
+
 .monthPre{
-    color: gray;
+    color: grey;
     text-align: center;
 }
 .monthNow{
     color: blue;
     text-align: center;
+	background-color: #FFFFFF;
+	border: 2px solid black;
 }
 .dayNow{
     border: 2px solid green;
     color: #FF0;
     text-align: center;
+	background-color: #FFFFFF;
+	border: 2px solid black;
 }
 .calendar td{
     htmlContent: 2px;
 	width: 14%;
-	padding-top: 20px;
-	padding-bottom: 20px;
-	border: 2px solid black;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 .monthNow th{
-    background-color: #000000;
+    background-color: #239B56;
     color: #FFFFFF;
     text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
 }
 .dayNames{
-    background: #0FF000;
-    color: #FFFFFF;
+    background: #FEF9E7;
+    color: #000000;
     text-align: center;
+	border: 2px solid black;
 }
 
-table {width: 90%; background-color: #FFFFFF;}
+table {width: 90%;}
 
 
