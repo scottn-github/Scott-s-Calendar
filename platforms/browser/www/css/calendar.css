@@ -11,18 +11,20 @@ Code source: Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-
     text-align: center;
 }
 .monthNow{
-    color: blue;
     text-align: center;
 	background-color: #FFFFFF;
 	border: 2px solid black;
 }
 .dayNow{
-    border: 2px solid green;
-    color: #FF0;
+    color: #FFFFFF;
     text-align: center;
-	background-color: #FFFFFF;
+	background-color: lightblue;
 	border: 2px solid black;
 }
+.calendar{
+	width: 90%;
+}
+
 .calendar td{
     htmlContent: 2px;
 	width: 14%;
@@ -32,7 +34,7 @@ Code source: Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-
 .monthNow th{
     background-color: #239B56;
     color: #FFFFFF;
-    text-align: center;
+    /* text-align: center; */
 	padding-top: 15px;
 	padding-bottom: 15px;
 }
@@ -43,6 +45,11 @@ Code source: Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-
 	border: 2px solid black;
 }
 
-table {width: 90%;}
+h3{
+	color: blue;
+}
 
+h4{
+	color: green;
+}
 

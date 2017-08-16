@@ -69,18 +69,18 @@ function displayCalendar(mon){
         // If the counter is the current day
         // highlight the current day using the CSS defined in header.
         if (counter == day && month == dateNow.getMonth()){
-            htmlContent +="<td class='dayNow' " + "><a onclick='return displayEvents(" + counter + ");' href='#pg3'>"+counter+"</a></td>";
+            htmlContent +="<td class='dayNow' " + "><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
 				//   onMouseOver='this.style.background=\"#FFFF00\"; this.style.color=\"#FFFFFF\"'
 				//onMouseOut='this.style.background=\"#FFFFFF\"; this.style.color=\"#00FF00\"'
         }
-		else if(month == dateNow.getMonth()){
-            htmlContent +="<td class='monthNow' "+" ><a onclick='return displayEvents(" + counter + ");' href='#pg3'>"+counter+"</a></td>";
+		else{
+            htmlContent +="<td class='monthNow' "+" ><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
 			//onMouseOver='this.style.background=\"#FFFF00\"'
 			//onMouseOut='this.style.background=\"#FFFFFF\"'
         }
-		else{
-			htmlContent +="<td class='monthNow' "+" >"+counter+"</td>";
-		}
+		//else{
+			//htmlContent +="<td class='monthNow' "+" >"+counter+"</td>";
+		//}
 			
 		
         weekdays2++;
@@ -105,30 +105,61 @@ function displayCalendar(mon){
 
 //End sourced code section
 
-//Display events for a particular day in August
-function displayEvents(day){
-	var augustEvents = ["", "", "", "", "", "", "", "", "", "", "", "Golf 2:00pm", "", "Doctor's appointment 10:00am|Pick up groceries", "", "", "", "", "", "", "", "", "", "", "", "Do laundry|Karaoke night", "", "", "", "", ""];
+//Display events for a particular day
+function displayEvents(year, month, day){
+	$.getJSON("js/eventsData.json", function(json) {
 	
-	var htmlCode = "<h4>Events for August " + day + ", 2017</h4>";
-	if(augustEvents[day - 1] == "")
+	var date = new Date(year, month, day);
+	var dateNow = new Date();
+	var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
+    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+	var dayOfWeek = date.getDay();
+	var events = [];
+	var hasEvents = false;
+	
+	
+	events = json.events;
+	
+	
+	
+	var htmlCode = "<h4>Events for " + dayNames[dayOfWeek] + ", " + monthNames[month] + " " + day + ", 2017</h4>";
+	
+	for(var i=0; i<events.length; i++)
+	{
+		if(events[i].year == year && events[i].month == month && events[i].day == day)
+		{
+			htmlCode += "<ul>";
+			
+			for(var j=0; j<events[i].data.length; j++)
+			{
+				htmlCode += "<li>" + events[i].data[j] + "</li>";
+			}
+			
+			htmlCode += "</ul>";
+			hasEvents = true;
+		}
+	}
+	
+	if(hasEvents == false)
 	{
 		htmlCode += "<p>No events</p>";
 	}
-	else
-	{
-		var events = augustEvents[day - 1].split("|");
+	//else
+	//{
+		//var events = augustEvents[day - 1].split("|");
 		
-		htmlCode += "<ul>";
+		//htmlCode += "<ul>";
 		
-		for(var i=0; i<events.length; i++)
-		{
-			htmlCode += "<li>" + events[i] + "</li>";
-		}
+		//for(var i=0; i<events.length; i++)
+		//{
+			//htmlCode += "<li>" + events[i] + "</li>";
+		//}
 		
-		htmlCode += "</ul>";
-	}
-	
+		//htmlCode += "</ul>";
+	//}
+
 	//Set HTML
 	document.getElementById("dayEvents").innerHTML=htmlCode;
+	});
 	return true;
 }

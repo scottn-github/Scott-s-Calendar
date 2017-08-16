@@ -5,7 +5,7 @@ Code source: Web Code Geeks(https://www.webcodegeeks.com/javascript/javascript-c
 
 */
 
-function displayCalendar(){
+function displayCalendar(mon){
 
 
     var htmlContent ="";
@@ -14,7 +14,7 @@ function displayCalendar(){
 
 
     var dateNow = new Date();
-    var month = dateNow.getMonth();
+    var month = mon;
     var day = dateNow.getDate();
     var year = dateNow.getFullYear();
 
@@ -23,7 +23,7 @@ function displayCalendar(){
 
 
 
-    //Determing if February (28,or 29)
+    //The number of days in February
     if (month == 1){
         if ( (year%100!=0) && (year%4==0) || (year%400==0)){
             FebNumberOfDays = 29;
@@ -33,7 +33,7 @@ function displayCalendar(){
     }
 
 
-    // names of months and week days.
+    // Set the names of months and days
     var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
     var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
     var dayPerMonth = ["31", ""+FebNumberOfDays+"","31","30","31","30","31","31","30","31","30","31"];
@@ -48,17 +48,17 @@ function displayCalendar(){
 
 
 
-    // this leave a white space for days of pervious month.
+    // Leaves a white space for days of previous month.
     while (weekdays>0){
         htmlContent += "<td class='monthPre'></td>";
 
         weekdays--;
     }
 
-    // loop to build the calendar body.
+    // Loop builds the calendar body.
     while (counter <= numOfDays){
 
-        // When to start new line.
+        // Starts new line for next week.
         if (weekdays2 > 6){
             weekdays2 = 0;
             htmlContent += "</tr><tr>";
@@ -66,24 +66,30 @@ function displayCalendar(){
 
 
 
-        // if counter is current day.
-        // highlight current day using the CSS defined in header.
-        if (counter == day){
-            htmlContent +="<td class='dayNow'  onMouseOver='this.style.background=\"#FFFF00\"; this.style.color=\"#FFFFFF\"' "+
-                "onMouseOut='this.style.background=\"#FFFFFF\"; this.style.color=\"#00FF00\"'>"+counter+"</td>";
-        }else{
-            htmlContent +="<td class='monthNow' onMouseOver='this.style.background=\"#FFFF00\"'"+
-                " onMouseOut='this.style.background=\"#FFFFFF\"'>"+counter+"</td>";
-
+        // If the counter is the current day
+        // highlight the current day using the CSS defined in header.
+        if (counter == day && month == dateNow.getMonth()){
+            htmlContent +="<td class='dayNow' " + "><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
+				//   onMouseOver='this.style.background=\"#FFFF00\"; this.style.color=\"#FFFFFF\"'
+				//onMouseOut='this.style.background=\"#FFFFFF\"; this.style.color=\"#00FF00\"'
         }
-
+		else{
+            htmlContent +="<td class='monthNow' "+" ><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
+			//onMouseOver='this.style.background=\"#FFFF00\"'
+			//onMouseOut='this.style.background=\"#FFFFFF\"'
+        }
+		//else{
+			//htmlContent +="<td class='monthNow' "+" >"+counter+"</td>";
+		//}
+			
+		
         weekdays2++;
         counter++;
     }
 
 
 
-    // building the calendar html body.
+    //Build the calendar HTML
     var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'>"
         +monthNames[month]+" "+ year +"</th></tr>";
     calendarBody +="<tr>  <td class='dayNames'>Sun</td class='dayNames'>  <td class='dayNames'>Mon</td> <td class='dayNames'>Tue</td>"+
@@ -91,7 +97,69 @@ function displayCalendar(){
     calendarBody += "<tr>";
     calendarBody += htmlContent;
     calendarBody += "</tr></table>";
-    // set the content of div .
+    //Set the HTML in page
     document.getElementById("calendar").innerHTML=calendarBody;
 
+	return true;
+}
+
+//End sourced code section
+
+//Display events for a particular day
+function displayEvents(year, month, day){
+	$.getJSON("js/eventsData.json", function(json) {
+	
+	var date = new Date(year, month, day);
+	var dateNow = new Date();
+	var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
+    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+	var dayOfWeek = date.getDay();
+	var events = [];
+	var hasEvents = false;
+	
+	
+	events = json.events;
+	
+	
+	
+	var htmlCode = "<h4>Events for " + dayNames[dayOfWeek] + ", " + monthNames[month] + " " + day + ", 2017</h4>";
+	
+	for(var i=0; i<events.length; i++)
+	{
+		if(events[i].year == year && events[i].month == month && events[i].day == day)
+		{
+			htmlCode += "<ul>";
+			
+			for(var j=0; j<events[i].data.length; j++)
+			{
+				htmlCode += "<li>" + events[i].data[j] + "</li>";
+			}
+			
+			htmlCode += "</ul>";
+			hasEvents = true;
+		}
+	}
+	
+	if(hasEvents == false)
+	{
+		htmlCode += "<p>No events</p>";
+	}
+	//else
+	//{
+		//var events = augustEvents[day - 1].split("|");
+		
+		//htmlCode += "<ul>";
+		
+		//for(var i=0; i<events.length; i++)
+		//{
+			//htmlCode += "<li>" + events[i] + "</li>";
+		//}
+		
+		//htmlCode += "</ul>";
+	//}
+
+	//Set HTML
+	document.getElementById("dayEvents").innerHTML=htmlCode;
+	});
+	return true;
 }

@@ -1,0 +1,22 @@
+{
+	"events": [
+		{
+			"year": 2017,
+			"month": 7,
+			"day": 12,
+			"data": ["Golf 2:00pm"]
+		},
+		{
+			"year": 2017,
+			"month": 7,
+			"day": 14,
+			"data": ["Doctor's Appointment 10:00am", "Pick up groceries"]
+		},
+		{
+			"year": 2017,
+			"month": 7,
+			"day": 26,
+			"data": ["Do laundry", "Karaoke night"]
+		}
+	]
+}

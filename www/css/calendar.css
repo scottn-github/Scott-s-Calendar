@@ -34,7 +34,7 @@ Code source: Web Code Geeks (https://www.webcodegeeks.com/javascript/javascript-
 .monthNow th{
     background-color: #239B56;
     color: #FFFFFF;
-    text-align: center;
+    /* text-align: center; */
 	padding-top: 15px;
 	padding-bottom: 15px;
 }
