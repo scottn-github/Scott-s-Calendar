@@ -14,7 +14,7 @@
   <script src="js/calendar.js"></script>
 </head>
 <!-- display the calendar on page load -->
-<body onload="var date = new Date(); displayCalendar(date.getMonth())">
+<body onload="var date = new Date(); displayCalendar(date.getFullYear(), date.getMonth())">
 
 <div data-role="page" id="main">
   <div data-role="header">
@@ -24,27 +24,65 @@
 		<div data-role="popup" id="myPopup1" style="min-width:200px;">
 			<ul data-role="listview">
   				<li data-icon="false"><a href="#main">Calendar</a></li>
-  				<li data-icon="false"><a href="#pg1">Upcoming events</a></li>
+  				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
 			</ul>
 		</div>
+	<!-- <a href="#yearPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-d ui-btn-icon-left" align="right">Year</a>
+		
+		<!-- Year selector popup 
+		<div data-role="popup" id="yearPopup" style="min-width:200px;">
+			<ul data-role="listview">
+  				<li data-icon="false"><a onclick="return displayCalendar(2000, 0);" href="#main">2000</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2001, 0);" href="#main">2001</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2002, 0);" href="#main">2002</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2003, 0);" href="#main">2003</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2004, 0);" href="#main">2004</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2005, 0);" href="#main">2005</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2006, 0);" href="#main">2006</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2007, 0);" href="#main">2007</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2008, 0);" href="#main">2008</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2009, 0);" href="#main">2009</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2010, 0);" href="#main">2010</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2011, 0);" href="#main">2011</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2012, 0);" href="#main">2012</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2013, 0);" href="#main">2013</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2014, 0);" href="#main">2014</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2015, 0);" href="#main">2015</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2016, 0);" href="#main">2016</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2017, 0);" href="#main">2017</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2018, 0);" href="#main">2018</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2019, 0);" href="#main">2019</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2020, 0);" href="#main">2020</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2021, 0);" href="#main">2021</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2022, 0);" href="#main">2022</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2023, 0);" href="#main">2023</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2024, 0);" href="#main">2024</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2025, 0);" href="#main">2025</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2026, 0);" href="#main">2026</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2027, 0);" href="#main">2027</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2028, 0);" href="#main">2028</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2029, 0);" href="#main">2029</a></li>
+				<li data-icon="false"><a onclick="return displayCalendar(2030, 0);" href="#main">2030</a></li>
+			</ul>
+		</div> -->
 	<a href="#monthPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-d ui-btn-icon-left" align="right">Month</a>
 		
 		<!-- Month selector popup -->
 		<div data-role="popup" id="monthPopup" style="min-width:200px;">
 			<ul data-role="listview">
-  				<li data-icon="false"><a onclick="return displayCalendar(0);" href="#main">Jan</a></li>
-  				<li data-icon="false"><a onclick="return displayCalendar(1);" href="#main">Feb</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(2);" href="#main">Mar</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(3);" href="#main">Apr</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(4);" href="#main">May</a></li>
-  				<li data-icon="false"><a onclick="return displayCalendar(5);" href="#main">Jun</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(6);" href="#main">Jul</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(7);" href="#main">Aug</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(8);" href="#main">Sep</a></li>
-  				<li data-icon="false"><a onclick="return displayCalendar(9);" href="#main">Oct</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(10);" href="#main">Nov</a></li>
-				<li data-icon="false"><a onclick="return displayCalendar(11);" href="#main">Dec</a></li>
+  				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 0);" href="#main">Jan</a></li>
+  				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 1);" href="#main">Feb</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 2);" href="#main">Mar</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 3);" href="#main">Apr</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 4);" href="#main">May</a></li>
+  				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 5);" href="#main">Jun</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 6);" href="#main">Jul</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 7);" href="#main">Aug</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 8);" href="#main">Sep</a></li>
+  				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 9);" href="#main">Oct</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 10);" href="#main">Nov</a></li>
+				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 11);" href="#main">Dec</a></li>
 			</ul>
 		</div>
     <h1>Scott's Calendar</h1>
@@ -74,7 +112,7 @@
 		<div data-role="popup" id="myPopup2" style="min-width:200px;">
 			<ul data-role="listview">
   				<li data-icon="false"><a href="#main">Calendar</a></li>
-  				<li data-icon="false"><a href="#pg1">Upcoming events</a></li>
+  				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
 			</ul>
 		</div>
@@ -82,33 +120,9 @@
   </div>
 
   <!-- Upcoming events test data -->
-  <div data-role="main" class="ui-content">
-	<!-- <div data-role="controlgroup" data-type="vertical">
-      <a href="#main" class="ui-btn">Home</a>
-      <a href="" class="ui-btn ui-btn-b">Page 1</a>
-      <a href="#pg2" class="ui-btn">Page 2</a>
-	  <a href="#pg3" class="ui-btn">Page 3</a>
-    </div> -->
-    <h3>Upcoming Events</h3>
-	<hr />
-	<h4>Saturday, August 12, 2017</h4>
-	<ul>
-		<li>Golf 1:00pm</li>
-	</ul>
-	<br />
-	<h4>Monday, August 14, 2017</h4>
-	<ul>
-		<li>Doctor's Appointment 10:00am</li>
-		<li>Pick up groceries</li>
-	</ul>
-	<br />
-	<h4>Saturday, August 26, 2017</h4>
-	<ul>
-		<li>Do laundry</li>
-		<li>Karaoke night</li>
-	</ul>
-	<br />
-  </div>
+  <div data-role="main" class="ui-content" id="upcomingEvents">
+	
+  </div> 
 
   <!--<div data-role="footer">
     <h1>Scott's Calendar</h1>
@@ -122,7 +136,7 @@
 		<div data-role="popup" id="myPopup3" style="min-width:200px;">
 			<ul data-role="listview">
   				<li data-icon="false"><a href="#main">Calendar</a></li>
-  				<li data-icon="false"><a href="#pg1">Upcoming events</a></li>
+  				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
 			</ul>
 		</div>
@@ -147,6 +161,10 @@
 <div data-role="page" id="pg3">
 	<div data-role="header">
 		<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left">Back</a>
+		
+		<div data-role="popup" id="addEventPopup" style="min-width:200px;">
+			<p>Add</p>
+		</div>
 		<h1>Scott's Calendar</h1>
 	</div>
 	

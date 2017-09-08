@@ -5,7 +5,7 @@ Code source: Web Code Geeks(https://www.webcodegeeks.com/javascript/javascript-c
 
 */
 
-function displayCalendar(mon){
+function displayCalendar(year, mon){
 
 
     var htmlContent ="";
@@ -16,7 +16,7 @@ function displayCalendar(mon){
     var dateNow = new Date();
     var month = mon;
     var day = dateNow.getDate();
-    var year = dateNow.getFullYear();
+    var year = year;
 
     var nextMonth = month+1;
     var prevMonth = month -1;
@@ -122,7 +122,7 @@ function displayEvents(year, month, day){
 	
 	
 	
-	var htmlCode = "<h4>Events for " + dayNames[dayOfWeek] + ", " + monthNames[month] + " " + day + ", 2017</h4>";
+	var htmlCode = "<h4>Events for " + dayNames[dayOfWeek] + ", " + monthNames[month] + " " + day + ", " + year +"</h4>";
 	
 	for(var i=0; i<events.length; i++)
 	{
@@ -144,6 +144,13 @@ function displayEvents(year, month, day){
 	{
 		htmlCode += "<p>No events</p>";
 	}
+	
+	htmlCode += "<a href='#addEventPopup' data-rel='popup' class='ui-btn ui-btn-inline ui-corner-all'>Add Event</a>";
+	//htmlCode += "<div data-role='popup' id='myPopup5' style='min-width:200px;'>"
+	//htmlCode += "<ul data-role='listview'>";
+	//htmlCode += "<li data-icon='false'><a href='#main'>Calendar</a></li>";
+	//htmlCode += "</ul>";
+	//htmlCode += "</div>";
 	//else
 	//{
 		//var events = augustEvents[day - 1].split("|");
@@ -160,6 +167,59 @@ function displayEvents(year, month, day){
 
 	//Set HTML
 	document.getElementById("dayEvents").innerHTML=htmlCode;
+	});
+	return true;
+}
+
+//Get the upcoming events and display them
+function displayUpcomingEvents(){
+	$.getJSON("js/eventsData.json", function(json) {
+		var dateNow = new Date();
+		//Get number of days since January 1, 1970
+		var dateNowInDays = dateNow.getTime() / 86400000;
+		var year = dateNow.getFullYear();
+		var month = dateNow.getMonth();
+		var day = dateNow.getDate();
+		var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
+		var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+		var events = [];
+		//var eventDate = new Date();
+		//var eventDateInDays;
+		var hasEvents = false;
+		
+		events = json.events;
+		
+		var htmlCode = "<h3>Upcoming Events</h3><hr />";
+		
+		for(var i=0; i<events.length; i++)
+		{
+			var eventDate = new Date(events[i].year, events[i].month, events[i].day);
+			var dayOfWeek = eventDate.getDay();
+			var eventDateInDays = eventDate.getTime() / 86400000;
+			
+			if(eventDateInDays >= dateNowInDays && eventDateInDays <= dateNowInDays + 365)
+			{
+				htmlCode += "<h4>" + dayNames[dayOfWeek] + ", " + monthNames[events[i].month] + " " + events[i].day + ", " + events[i].year +"</h4>";
+				
+				htmlCode += "<ul>";
+				
+				for(var j=0; j<events[i].data.length; j++)
+				{
+					htmlCode += "<li>" + events[i].data[j] + "</li>";
+				}
+				
+				htmlCode += "</ul>";
+				hasEvents = true;
+			}
+		}
+		
+		if(hasEvents == false)
+		{
+			htmlCode += "<p>No events</p>";
+		}
+		
+		//Set HTML
+		document.getElementById("upcomingEvents").innerHTML=htmlCode;
 	});
 	return true;
 }
