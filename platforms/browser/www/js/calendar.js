@@ -35,7 +35,7 @@ function displayCalendar(year, mon){
 
     // Set the names of months and days
     var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
-    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"];
     var dayPerMonth = ["31", ""+FebNumberOfDays+"","31","30","31","30","31","31","30","31","30","31"];
 
 
@@ -107,37 +107,48 @@ function displayCalendar(year, mon){
 
 //Display events for a particular day
 function displayEvents(year, month, day){
-	$.getJSON("js/eventsData.json", function(json) {
+	//$.getJSON("js/eventsData.json", function(json) {
 	
 	var date = new Date(year, month, day);
 	var dateNow = new Date();
 	var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
-    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"];
 	var dayOfWeek = date.getDay();
 	var events = [];
 	var hasEvents = false;
 	
 	
-	events = json.events;
+	
 	
 	
 	
 	var htmlCode = "<h4>Events for " + dayNames[dayOfWeek] + ", " + monthNames[month] + " " + day + ", " + year +"</h4>";
+	//var headerCode = "<a href='#main' data-rel='button' class='ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left'>Back</a>";
 	
-	for(var i=0; i<events.length; i++)
-	{
-		if(events[i].year == year && events[i].month == month && events[i].day == day)
-		{
-			htmlCode += "<ul>";
-			
-			for(var j=0; j<events[i].data.length; j++)
+	try{
+		events = JSON.parse(localStorage.getItem('events'));
+	
+		if(events != null){
+	
+			for(var i=0; i<events.length; i++)
 			{
-				htmlCode += "<li>" + events[i].data[j] + "</li>";
+				if(events[i].year == year && events[i].month == month && events[i].day == day)
+				{
+					htmlCode += "<ul>";
+				
+					for(var j=0; j<events[i].data.length; j++)
+					{
+						htmlCode += "<li>" + events[i].data[j] + "&nbsp&nbsp<a href='#pg3' onclick='deleteEvent(" + i + ", " + j + ", " + events[i].year + ", " + events[i].month + ", " + events[i].day + ", 1)'>Delete</a></li>";
+					}
+				
+					htmlCode += "</ul>";
+					hasEvents = true;
+				}
 			}
-			
-			htmlCode += "</ul>";
-			hasEvents = true;
 		}
+	}
+	catch(e){
+		
 	}
 	
 	if(hasEvents == false)
@@ -145,29 +156,21 @@ function displayEvents(year, month, day){
 		htmlCode += "<p>No events</p>";
 	}
 	
-	htmlCode += "<a href='#addEventPopup' data-rel='popup' class='ui-btn ui-btn-inline ui-corner-all'>Add Event</a>";
-	//htmlCode += "<div data-role='popup' id='myPopup5' style='min-width:200px;'>"
-	//htmlCode += "<ul data-role='listview'>";
-	//htmlCode += "<li data-icon='false'><a href='#main'>Calendar</a></li>";
-	//htmlCode += "</ul>";
-	//htmlCode += "</div>";
-	//else
-	//{
-		//var events = augustEvents[day - 1].split("|");
-		
-		//htmlCode += "<ul>";
-		
-		//for(var i=0; i<events.length; i++)
-		//{
-			//htmlCode += "<li>" + events[i] + "</li>";
-		//}
-		
-		//htmlCode += "</ul>";
-	//}
+	//htmlCode += "<a href='#addEventPopup' data-rel='popup' class='ui-btn ui-btn-inline ui-corner-all'>Add Event</a>";
+
+	//headerCode += "<div data-role='popup' id='addEventPopup'>"
+	//headerCode += "<input type='text' data-clear-btn='true' id='eventInput' value='' />"
+	//headerCode += "<button class='ui-btn'>Add</button>"
+	//headerCode += "</div>";
+	//headerCode += "<h1>Scott's Calendar</h1>"
+
+	
 
 	//Set HTML
 	document.getElementById("dayEvents").innerHTML=htmlCode;
-	});
+	document.getElementById("eventInputButton").onclick=function(){addEvent(year, month, day);};
+	//document.getElementById("eventsHeader").innerHTML=headerCode;
+	//});
 	return true;
 }
 
@@ -181,36 +184,45 @@ function displayUpcomingEvents(){
 		var month = dateNow.getMonth();
 		var day = dateNow.getDate();
 		var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
-		var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thrusday","Friday", "Saturday"];
+		var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"];
 		var events = [];
 		//var eventDate = new Date();
 		//var eventDateInDays;
 		var hasEvents = false;
 		
-		events = json.events;
+		
 		
 		var htmlCode = "<h3>Upcoming Events</h3><hr />";
 		
-		for(var i=0; i<events.length; i++)
-		{
-			var eventDate = new Date(events[i].year, events[i].month, events[i].day);
-			var dayOfWeek = eventDate.getDay();
-			var eventDateInDays = eventDate.getTime() / 86400000;
+		try{
+			events = JSON.parse(localStorage.getItem('events'));
 			
-			if(eventDateInDays >= dateNowInDays && eventDateInDays <= dateNowInDays + 365)
-			{
-				htmlCode += "<h4>" + dayNames[dayOfWeek] + ", " + monthNames[events[i].month] + " " + events[i].day + ", " + events[i].year +"</h4>";
-				
-				htmlCode += "<ul>";
-				
-				for(var j=0; j<events[i].data.length; j++)
+			if(events != null){
+				for(var i=0; i<events.length; i++)
 				{
-					htmlCode += "<li>" + events[i].data[j] + "</li>";
+					var eventDate = new Date(events[i].year, events[i].month, events[i].day);
+					var dayOfWeek = eventDate.getDay();
+					var eventDateInDays = eventDate.getTime() / 86400000;
+					
+					if(eventDateInDays >= dateNowInDays && eventDateInDays <= dateNowInDays + 365)
+					{
+						htmlCode += "<h4>" + dayNames[dayOfWeek] + ", " + monthNames[events[i].month] + " " + events[i].day + ", " + events[i].year +"</h4>";
+						
+						htmlCode += "<ul>";
+						
+						for(var j=0; j<events[i].data.length; j++)
+						{
+							htmlCode += "<li>" + events[i].data[j] + "&nbsp&nbsp<a href='#pg1' onclick='return deleteEvent(" + i + ", " + j + ", " + events[i].year + ", " + events[i].month + ", " + events[i].day + ", 2)'>Delete</a></li>";
+						}
+						
+						htmlCode += "</ul>";
+						hasEvents = true;
+					}
 				}
-				
-				htmlCode += "</ul>";
-				hasEvents = true;
 			}
+		}
+		catch(e){
+			
 		}
 		
 		if(hasEvents == false)
@@ -222,4 +234,103 @@ function displayUpcomingEvents(){
 		document.getElementById("upcomingEvents").innerHTML=htmlCode;
 	});
 	return true;
+}
+
+function addEvent(year, month, day){
+	var eventText = document.getElementById("eventInput").value;
+	var events = [];
+	var evt;
+	var multipleEvents = false;
+	
+	if(eventText != ""){
+		try{
+			events = JSON.parse(localStorage.getItem('events'));
+			
+			evt = {
+				"year": year,
+				"month": month,
+				"day": day,
+				"data": [eventText]
+			};
+			
+			for(var i=0; i<events.length; i++){
+				if(events[i].year == year && events[i].month == month && events[i].day == day){
+					events[i].data.push(eventText);
+					//Sort events in ascending order
+					events = sortEvents(events);
+					multipleEvents = true;
+				}
+			}
+			
+			if(multipleEvents == false){
+				events.push(evt);
+				//Sort events in ascending order
+				events = sortEvents(events);
+			}
+			
+			localStorage.setItem('events', JSON.stringify(events));
+		}
+		catch(e){
+			evt = [{
+				"year": year,
+				"month": month,
+				"day": day,
+				"data": [eventText]
+			}];
+			
+			localStorage.setItem('events', JSON.stringify(evt));
+		}
+		displayEvents(year, month, day);
+		return true;
+	}
+	else{
+		return false;
+	}
+	
+}
+
+function deleteEvent(index, subIndex, year, month, day, displayType){
+	var events = []
+	
+	try{
+		events = JSON.parse(localStorage.getItem('events'));
+		
+		events[index].data.splice(subIndex, 1);
+		
+		if(events[index].data.length < 1){
+			events.splice(index, 1);
+		}
+		
+		localStorage.setItem('events', JSON.stringify(events));
+		
+		if(displayType == 1){
+			displayEvents(year, month, day);
+		}
+		else if(displayType == 2){
+			displayUpcomingEvents();
+		}
+	}
+	catch(e){
+		
+	}
+	
+	return true;
+}
+
+//Sort events in ascending order
+function sortEvents(events){
+	var sortedEvents = events;
+	var temp;
+	
+	for(var i=sortedEvents.length - 1; i > 0; i--){
+		for(var j=0; j < i; j++){
+			if(new Date(sortedEvents[j].year, sortedEvents[j].month, sortedEvents[j].day).getTime() > new Date(sortedEvents[j+1].year, sortedEvents[j+1].month, sortedEvents[j+1].day).getTime()){
+				temp = sortedEvents[j];
+				sortedEvents[j] = sortedEvents[j+1];
+				sortedEvents[j+1] = temp;
+			}
+		}
+	}
+	
+	return sortedEvents;
 }

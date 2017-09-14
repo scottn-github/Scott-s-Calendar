@@ -162,14 +162,27 @@
 	<div data-role="header">
 		<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left">Back</a>
 		
-		<div data-role="popup" id="addEventPopup" style="min-width:200px;">
-			<p>Add</p>
-		</div>
+		<!-- <div data-role="popup" id="addEventPopup">
+			<input type="text" data-clear-btn="true" id="eventInput" value="" />
+			<a href="#pg3" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" id="eventInputButton">Add</a>
+			<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" onclick="localStorage.removeItem('events');">Clear all events</a>
+		</div> -->
 		<h1>Scott's Calendar</h1>
 	</div>
 	
-	<div data-role="main" id="dayEvents" class="ui-content">
-		
+	<div data-role="main" class="ui-content">
+		<div id="dayEvents">
+			
+		</div>
+		<!-- <div data-role="collapsible"> -->
+			
+		<!-- </div> -->
+		<div data-role="collapsible">
+			<h4>Add Event</h4>
+			<input type="text" data-clear-btn="true" id="eventInput" value="" />
+			<a href="#pg3" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" id="eventInputButton">Add</a>
+			<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" onclick="localStorage.removeItem('events');">Clear all events</a>
+		</div>
 	</div>
 </div> 
 
