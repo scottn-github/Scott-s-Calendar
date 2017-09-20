@@ -21,8 +21,6 @@ function displayCalendar(year, mon){
     var nextMonth = month+1;
     var prevMonth = month -1;
 
-
-
     //The number of days in February
     if (month == 1){
         if ( (year%100!=0) && (year%4==0) || (year%400==0)){
@@ -98,7 +96,7 @@ function displayCalendar(year, mon){
     calendarBody += htmlContent;
     calendarBody += "</tr></table>";
     //Set the HTML in page
-    document.getElementById("calendar").innerHTML=calendarBody;
+    document.getElementById("calendarDisplay").innerHTML=calendarBody;
 
 	return true;
 }
@@ -116,7 +114,6 @@ function displayEvents(year, month, day){
 	var dayOfWeek = date.getDay();
 	var events = [];
 	var hasEvents = false;
-	
 	
 	
 	
@@ -192,6 +189,7 @@ function displayUpcomingEvents(){
 		
 		
 		
+		
 		var htmlCode = "<h3>Upcoming Events</h3><hr />";
 		
 		try{
@@ -202,6 +200,7 @@ function displayUpcomingEvents(){
 				{
 					var eventDate = new Date(events[i].year, events[i].month, events[i].day);
 					var dayOfWeek = eventDate.getDay();
+					//Get number of days since January 1, 1970
 					var eventDateInDays = eventDate.getTime() / 86400000;
 					
 					if(eventDateInDays >= dateNowInDays && eventDateInDays <= dateNowInDays + 365)
@@ -230,14 +229,17 @@ function displayUpcomingEvents(){
 			htmlCode += "<p>No events</p>";
 		}
 		
+		
+		
 		//Set HTML
 		document.getElementById("upcomingEvents").innerHTML=htmlCode;
 	});
 	return true;
 }
 
+//Add an event on a date specified by parameters
 function addEvent(year, month, day){
-	var eventText = document.getElementById("eventInput").value;
+	var eventText = document.getElementById("eventInput").value.replace(/[^a-zA-Z 0-9':]+/g,'');
 	var events = [];
 	var evt;
 	var multipleEvents = false;
@@ -289,6 +291,7 @@ function addEvent(year, month, day){
 	
 }
 
+//Delete a specific event
 function deleteEvent(index, subIndex, year, month, day, displayType){
 	var events = []
 	
@@ -333,4 +336,55 @@ function sortEvents(events){
 	}
 	
 	return sortedEvents;
+}
+
+//Sync user events data to introtoapps server
+function syncToServer(key){
+	try{
+		document.getElementById("syncResult").innerHTML="<p>Please wait...</p>";
+		var data = localStorage.getItem(key);
+		var encodedData = encodeURI(data);
+		
+		var xhttp = new XMLHttpRequest();
+			
+		xhttp.onreadystatechange = function() {
+			//Successful response handler
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("syncResult").innerHTML="<p>Data successfully synced to cloud.</p>";
+			}
+			//Unsuccessful response handler
+			if (this.readyState == 4 && this.status == 404) {
+				document.getElementById("syncResult").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
+			}
+		};
+		xhttp.open("POST", "http://introtoapps.com/datastore.php", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("action=save&appid=800469543&objectid=user-test&data=" + encodedData);
+	}
+	catch(e){
+		alert("Your calendar has no events");
+	}
+	return true;
+}
+
+//Sync user events data from introtoapps server
+function syncFromServer(username){	
+	document.getElementById("syncResult").innerHTML="<p>Please wait...</p>";
+	var xhttp = new XMLHttpRequest();
+	
+	xhttp.onreadystatechange = function() {
+		//Successful response handler
+		if (this.readyState == 4 && this.status == 200) {
+			//Put events data into local storage
+			localStorage.setItem('events', xhttp.responseText);
+			document.getElementById("syncResult").innerHTML="<p>Data successfully synced from cloud.</p>";
+		}
+		//Unsuccessful response handler
+		if (this.readyState == 4 && this.status == 404) {
+			document.getElementById("syncResult").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
+		}
+	};
+	
+	xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=user-" + username, true);
+	xhttp.send();
 }

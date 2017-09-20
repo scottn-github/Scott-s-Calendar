@@ -14,18 +14,48 @@
   <script src="js/calendar.js"></script>
 </head>
 <!-- display the calendar on page load -->
-<body onload="var date = new Date(); displayCalendar(date.getFullYear(), date.getMonth())">
+<body onload="var date = new Date(); displayCalendar(date.getFullYear(), date.getMonth());">
+<div data-role="page" id="main" data-theme="a">
+	<div data-role="header">
+		<h1>Welcome</h1>
+	</div>	
+	<div data-role="main" class="ui-content">
+		<form>
+			<label for="uname">Username:</label><input type="text" id="uname" value="" />
+			</label for="pwd">Password:</label><input type="password" id="pwd" value="" />
+			<a href="#calendar" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Login</a>
+		</form>
+		<a href="#createAccount">Don't have an account yet? Create one now</a>
+	</div>
+</div>
 
-<div data-role="page" id="main">
+<div data-role="page" id="createAccount" data-theme="a">
+	<div data-role="header">
+		<h1>New Account</h1>
+	</div>
+	<div data-role="main" class="ui-content">
+		<form>
+			<label for="newuname">New username:</label><input type="text" id="newuname" value="" />
+			</label for="newpwd">New password:</label><input type="password" id="newpwd" value="" />
+			</label for="retypenewpwd">Re-type new password:</label><input type="password" id="retypenewpwd" value="" />
+			<label for="email">Email:</label><input type="text" id="email" value="" />
+			<a href="#" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Create Account</a>
+			<a href="#calendar" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Go To My Calendar</a>
+		</form>
+	</div>
+</div> 
+
+<div data-role="page" id="calendar" data-theme="a">
   <div data-role="header">
 	<!-- Menu bar popup -->
 	<a href="#myPopup1" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-bars ui-btn-icon-left">Menu</a>
 
 		<div data-role="popup" id="myPopup1" style="min-width:200px;">
 			<ul data-role="listview">
-  				<li data-icon="false"><a href="#main">Calendar</a></li>
+  				<li data-icon="false"><a href="#calendar">Calendar</a></li>
   				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
+				<li data-icon="false"><a href="#main">Log Out</a></li>
 			</ul>
 		</div>
 	<!-- <a href="#yearPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-d ui-btn-icon-left" align="right">Year</a>
@@ -66,10 +96,10 @@
 				<li data-icon="false"><a onclick="return displayCalendar(2030, 0);" href="#main">2030</a></li>
 			</ul>
 		</div> -->
-	<a href="#monthPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-d ui-btn-icon-left" align="right">Month</a>
+	<a onclick="return syncToServer('events')" href="#syncResultPopup" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-inline ui-corner-all ui-icon-refresh ui-btn-icon-left" align="right">Sync</a>
 		
 		<!-- Month selector popup -->
-		<div data-role="popup" id="monthPopup" style="min-width:200px;">
+		<!-- <div data-role="popup" id="monthPopup" style="min-width:200px;">
 			<ul data-role="listview">
   				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 0);" href="#main">Jan</a></li>
   				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 1);" href="#main">Feb</a></li>
@@ -84,8 +114,26 @@
 				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 10);" href="#main">Nov</a></li>
 				<li data-icon="false"><a onclick="date = new Date(); return displayCalendar(date.getFullYear(), 11);" href="#main">Dec</a></li>
 			</ul>
+		</div> -->
+		<!-- <div data-role="popup" id="syncPopup" style="min-width:200px;">
+			<ul data-role="listview">
+  				<li data-icon="false"><a onclick="return syncToServer('events')" href="#syncResultPopup">Sync to Cloud</a></li>
+  				<li data-icon="false"><a onclick="return syncFromServer('test')" href="#syncResultPopup">Sync from Cloud</a></li>
+				<li data-icon="false"><a onclick="" href="#syncResultPopup">Test</a></li>
+			</ul>			
+		</div> -->
+		<div data-role="popup" id="syncResultPopup" data-overlay-theme="b" data-dismissible="false" style="min-width:300px;">
+			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+			<div data-role="header">						
+				<h1>Calendar Sync</h1>
+			</div>
+			<div data-role="main" class="ui-content" style="text-align: center;">						
+				<div id="syncResult">
+						
+				</div>
+			</div>
 		</div>
-    <h1>Scott's Calendar</h1>
+    <h1>My Calendar</h1>
   </div>
 
   <!-- div where calendar displays -->
@@ -96,51 +144,57 @@
       <a href="#pg2" class="ui-btn">Page 2</a>
 	  <a href="#pg3" class="ui-btn">Page 3</a>
     </div> -->
-	<div id="calendar"></div>
+	<div id="calendarDisplay"></div>
   </div>
 
 
   <!-- <div data-role="footer">
-    <h1>Scott's Calendar</h1>
+    <h1>My Calendar</h1>
   </div> -->
 </div>
 
-<div data-role="page" id="pg1">
+<div data-role="page" id="pg1" data-theme="a">
   <div data-role="header">
 	<a href="#myPopup2" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-bars ui-btn-icon-left">Menu</a>
 
 		<div data-role="popup" id="myPopup2" style="min-width:200px;">
 			<ul data-role="listview">
-  				<li data-icon="false"><a href="#main">Calendar</a></li>
+  				<li data-icon="false"><a href="#calendar">Calendar</a></li>
   				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
+				<li data-icon="false"><a href="#main">Log Out</a></li>
 			</ul>
 		</div>
-    <h1>Scott's Calendar</h1>
+    <h1>My Calendar</h1>
   </div>
 
-  <!-- Upcoming events test data -->
-  <div data-role="main" class="ui-content" id="upcomingEvents">
-	
+  
+  <div data-role="main" class="ui-content">
+	<!-- Upcoming events test data -->
+	<div id="upcomingEvents">
+	</div>
+	<div id="displayPage">
+	</div>
   </div> 
-
+  
   <!--<div data-role="footer">
-    <h1>Scott's Calendar</h1>
+    <h1>My Calendar</h1>
   </div> -->
 </div>
 
-<div data-role="page" id="pg2">
+<div data-role="page" id="pg2" data-theme="a">
   <div data-role="header">
     <a href="#myPopup3" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-bars ui-btn-icon-left">Menu</a>
 
 		<div data-role="popup" id="myPopup3" style="min-width:200px;">
 			<ul data-role="listview">
-  				<li data-icon="false"><a href="#main">Calendar</a></li>
+  				<li data-icon="false"><a href="#calendar">Calendar</a></li>
   				<li data-icon="false"><a onclick="return displayUpcomingEvents();" href="#pg1">Upcoming events</a></li>
 				<li data-icon="false"><a href="#pg2">Settings</a></li>
+				<li data-icon="false"><a href="#main">Log Out</a></li>
 			</ul>
 		</div>
-	<h1>Scott's Calendar</h1>
+	<h1>My Calendar</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -154,20 +208,20 @@
   </div>
 
   <!-- <div data-role="footer">
-    <h1>Scott's Calendar</h1>
+    <h1>My Calendar</h1>
   </div> -->
 </div>
 
-<div data-role="page" id="pg3">
+<div data-role="page" id="pg3" data-theme="a">
 	<div data-role="header">
-		<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left">Back</a>
+		<a href="#calendar" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left">Back</a>
 		
 		<!-- <div data-role="popup" id="addEventPopup">
 			<input type="text" data-clear-btn="true" id="eventInput" value="" />
 			<a href="#pg3" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" id="eventInputButton">Add</a>
 			<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" onclick="localStorage.removeItem('events');">Clear all events</a>
 		</div> -->
-		<h1>Scott's Calendar</h1>
+		<h1>My Calendar</h1>
 	</div>
 	
 	<div data-role="main" class="ui-content">
@@ -181,7 +235,6 @@
 			<h4>Add Event</h4>
 			<input type="text" data-clear-btn="true" id="eventInput" value="" />
 			<a href="#pg3" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" id="eventInputButton">Add</a>
-			<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" onclick="localStorage.removeItem('events');">Clear all events</a>
 		</div>
 	</div>
 </div> 
