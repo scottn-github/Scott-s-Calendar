@@ -6,6 +6,17 @@ JQuery(jquery-1.12.4.min.js)
 JQuery Mobile(jquery.mobile-1.4.5.min.js)
 (jquery.mobile-1.4.5.min.css)
 
+sha256.js(https://asecuritysite.com/sha256.js)
+/*
+ * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
+ * in FIPS 180-2
+ * Version 2.2 Copyright Angel Marin, Paul Johnston 2000 - 2009.
+ * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+ * Distributed under the BSD License
+ * See http://pajhome.org.uk/crypt/md5 for details.
+ * Also http://anmar.eu.org/projects/jssha2/
+ */
+
 Adobe Cordova
 
 

@@ -5,100 +5,130 @@ Code source: Web Code Geeks(https://www.webcodegeeks.com/javascript/javascript-c
 
 */
 
-function displayCalendar(year, mon){
+//Create a new calendar
+calendar = new createCalendar();
 
-
-    var htmlContent ="";
-    var FebNumberOfDays ="";
-    var counter = 1;
-
-
-    var dateNow = new Date();
-    var month = mon;
+//Create a calendar
+function createCalendar(){
+	
+	var dateNow = new Date();
+    var month = dateNow.getMonth();
     var day = dateNow.getDate();
-    var year = year;
+    var year = dateNow.getFullYear();
+    
+	//Display the calendar
+	this.displayCalendar = function(){
+		var htmlContent ="";
+		var FebNumberOfDays ="";
+		var counter = 1;
 
-    var nextMonth = month+1;
-    var prevMonth = month -1;
+    
 
-    //The number of days in February
-    if (month == 1){
-        if ( (year%100!=0) && (year%4==0) || (year%400==0)){
-            FebNumberOfDays = 29;
-        }else{
-            FebNumberOfDays = 28;
-        }
-    }
+		var nextMonth = month+1;
+		var prevMonth = month -1;
 
-
-    // Set the names of months and days
-    var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
-    var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"];
-    var dayPerMonth = ["31", ""+FebNumberOfDays+"","31","30","31","30","31","31","30","31","30","31"];
-
-
-    // days in previous month and next one , and day of week.
-    var nextDate = new Date(nextMonth +' 1 ,'+year);
-    var weekdays= nextDate.getDay();
-    var weekdays2 = weekdays;
-    var numOfDays = dayPerMonth[month];
+		//The number of days in February
+		if (month == 1){
+			if ( (year%100!=0) && (year%4==0) || (year%400==0)){
+				FebNumberOfDays = 29;
+			}else{
+				FebNumberOfDays = 28;
+			}
+		}
 
 
+		// Set the names of months and days
+		var monthNames = ["January","February","March","April","May","June","July","August","September","October","November", "December"];
+		var dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday", "Saturday"];
+		var dayPerMonth = ["31", ""+FebNumberOfDays+"","31","30","31","30","31","31","30","31","30","31"];
 
 
-    // Leaves a white space for days of previous month.
-    while (weekdays>0){
-        htmlContent += "<td class='monthPre'></td>";
-
-        weekdays--;
-    }
-
-    // Loop builds the calendar body.
-    while (counter <= numOfDays){
-
-        // Starts new line for next week.
-        if (weekdays2 > 6){
-            weekdays2 = 0;
-            htmlContent += "</tr><tr>";
-        }
+		// days in previous month and next one , and day of week.
+		var nextDate = new Date(nextMonth +' 1 ,'+year);
+		var weekdays= nextDate.getDay();
+		var weekdays2 = weekdays;
+		var numOfDays = dayPerMonth[month];
 
 
 
-        // If the counter is the current day
-        // highlight the current day using the CSS defined in header.
-        if (counter == day && month == dateNow.getMonth()){
-            htmlContent +="<td class='dayNow' " + "><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
-				//   onMouseOver='this.style.background=\"#FFFF00\"; this.style.color=\"#FFFFFF\"'
-				//onMouseOut='this.style.background=\"#FFFFFF\"; this.style.color=\"#00FF00\"'
-        }
-		else{
-            htmlContent +="<td class='monthNow' "+" ><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
-			//onMouseOver='this.style.background=\"#FFFF00\"'
-			//onMouseOut='this.style.background=\"#FFFFFF\"'
-        }
-		//else{
-			//htmlContent +="<td class='monthNow' "+" >"+counter+"</td>";
-		//}
+
+		// Leaves a white space for days of previous month.
+		while (weekdays>0){
+			htmlContent += "<td class='monthPre'></td>";
+	
+			weekdays--;
+		}
+
+		// Loop builds the calendar body.
+		while (counter <= numOfDays){
+
+			// Starts new line for next week.
+			if (weekdays2 > 6){
+				weekdays2 = 0;
+				htmlContent += "</tr><tr>";
+			}
+
+
+
+			// If the counter is the current day
+			// highlight the current day using the CSS defined in header.
+			if (counter == day && month == dateNow.getMonth()){
+				htmlContent +="<td class='dayNow' " + "><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
+					//   onMouseOver='this.style.background=\"#FFFF00\"; this.style.color=\"#FFFFFF\"'
+					//onMouseOut='this.style.background=\"#FFFFFF\"; this.style.color=\"#00FF00\"'
+			}
+			else{
+				htmlContent +="<td class='monthNow' "+" ><a onclick='return displayEvents(" + year + ", " + month + ", " + counter + ");' href='#pg3'>"+counter+"</a></td>";
+				//onMouseOver='this.style.background=\"#FFFF00\"'
+				//onMouseOut='this.style.background=\"#FFFFFF\"'
+			}
+			//else{
+				//htmlContent +="<td class='monthNow' "+" >"+counter+"</td>";
+			//}
 			
 		
-        weekdays2++;
-        counter++;
-    }
+			weekdays2++;
+			counter++;
+		}
 
 
 
-    //Build the calendar HTML
-    var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'>"
-        +monthNames[month]+" "+ year +"</th></tr>";
-    calendarBody +="<tr>  <td class='dayNames'>Sun</td class='dayNames'>  <td class='dayNames'>Mon</td> <td class='dayNames'>Tue</td>"+
-        "<td class='dayNames'>Wed</td class='dayNames'> <td class='dayNames'>Thu</td> <td class='dayNames'>Fri</td> <td class='dayNames'>Sat</td> </tr>";
-    calendarBody += "<tr>";
-    calendarBody += htmlContent;
-    calendarBody += "</tr></table>";
-    //Set the HTML in page
-    document.getElementById("calendarDisplay").innerHTML=calendarBody;
-
-	return true;
+		//Build the calendar HTML
+		var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'><a href='*' onclick='calendar.goToPreviousMonth()' style='color: yellow; text-decoration: none'>&#8678Next</a>&nbsp&nbsp"
+			+monthNames[month]+" "+ year +"&nbsp&nbsp<a href='#' onclick='calendar.goToNextMonth()' style='color: yellow; text-decoration: none'>Prev&#8680</a></th></tr>";
+		calendarBody +="<tr>  <td class='dayNames'>Sun</td class='dayNames'>  <td class='dayNames'>Mon</td> <td class='dayNames'>Tue</td>"+
+			"<td class='dayNames'>Wed</td class='dayNames'> <td class='dayNames'>Thu</td> <td class='dayNames'>Fri</td> <td class='dayNames'>Sat</td> </tr>";
+		calendarBody += "<tr>";
+		calendarBody += htmlContent;
+		calendarBody += "</tr></table>";
+		//Set the HTML in page
+		document.getElementById("calendarDisplay").innerHTML=calendarBody;
+	};
+	
+	//Go to the next month
+	this.goToNextMonth = function(){
+		if(month < 11){
+			month += 1;
+		}
+		else{
+			month = 0;
+			year += 1;
+		}
+		this.displayCalendar();
+	};
+	
+	//Go to the previous month
+	this.goToPreviousMonth = function(){
+		if(month > 0){
+			month -= 1;
+		}
+		else{
+			month = 11;
+			year -= 1;
+		}
+		this.displayCalendar();
+	};
+	
 }
 
 //End sourced code section
@@ -173,7 +203,6 @@ function displayEvents(year, month, day){
 
 //Get the upcoming events and display them
 function displayUpcomingEvents(){
-	$.getJSON("js/eventsData.json", function(json) {
 		var dateNow = new Date();
 		//Get number of days since January 1, 1970
 		var dateNowInDays = dateNow.getTime() / 86400000;
@@ -233,7 +262,6 @@ function displayUpcomingEvents(){
 		
 		//Set HTML
 		document.getElementById("upcomingEvents").innerHTML=htmlCode;
-	});
 	return true;
 }
 
@@ -339,10 +367,11 @@ function sortEvents(events){
 }
 
 //Sync user events data to introtoapps server
-function syncToServer(key){
+function syncToServer(){
 	try{
 		document.getElementById("syncResult").innerHTML="<p>Please wait...</p>";
-		var data = localStorage.getItem(key);
+		var data = localStorage.getItem('events');
+		var username = localStorage.getItem('username');
 		var encodedData = encodeURI(data);
 		
 		var xhttp = new XMLHttpRequest();
@@ -359,10 +388,10 @@ function syncToServer(key){
 		};
 		xhttp.open("POST", "http://introtoapps.com/datastore.php", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("action=save&appid=800469543&objectid=user-test&data=" + encodedData);
+		xhttp.send("action=save&appid=800469543&objectid=user-" + username + "&data=" + encodedData);
 	}
 	catch(e){
-		alert("Your calendar has no events");
+		document.getElementById("syncResult").innerHTML="<p>You are not logged in, or your calendar has no events.</p>";
 	}
 	return true;
 }
@@ -386,5 +415,193 @@ function syncFromServer(username){
 	};
 	
 	xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=user-" + username, true);
+	
+	xhttp.timeout = 5000;
+	
+	//Response timed out handler
+	xhttp.ontimeout = function(e){
+		document.getElementById("syncResult").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
+	};
+	
 	xhttp.send();
 }
+
+//Creates a user account
+function createAccount(){
+	var username = document.getElementById("newuname").value.replace(/[^a-zA-Z0-9]+/g,'').toLowerCase();
+	var pwd = document.getElementById("newpwd").value;
+	var retypePwd = document.getElementById("retypenewpwd").value;
+	var email = document.getElementById("email").value.replace(/[^a-zA-Z0-9@.]+/g,'');
+	var account;
+	var encodedData;
+		
+		//Validate user input
+		if(pwd != retypePwd){
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Typed passwords do not match.</p>";
+		}
+		else if(pwd.length < 6 || pwd.length > 30){
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Password must be between 6 and 30 characters.</p>";
+		}
+		else if(username != document.getElementById("newuname").value.toLowerCase()){
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Username may only contain letters and numbers.</p>";
+		}
+		else if(username.length < 6 || username.length > 30){
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Username must be between 6 and 30 characters.</p>";
+		}
+		else if(email != document.getElementById("email").value || !email.includes("@") || !email.includes(".") || email.indexOf("@") != email.lastIndexOf("@")){
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Not a valid email address.</p>";
+		}
+		else{
+			account = {
+				"username": username,
+				"password": rstr_sha256(pwd), //Hash password with SHA-256
+				"email": email,
+			};
+		
+			encodedData = encodeURI(JSON.stringify(account));
+		
+			var xhttp = new XMLHttpRequest();
+	
+			xhttp.onreadystatechange = function() {
+				//Successful response handler
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("newAccountResult").innerHTML="<p>Account successfully created. Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+					document.getElementById("goToMyCalendarNewAccount").style.visibility="visible";
+					localStorage.setItem('username', username);
+				}
+				//Unsuccessful response handler
+				if (this.readyState == 4 && this.status == 404) {
+					document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Unable to contact remote server.</p>";
+				}
+			};
+			
+			xhttp.open("POST", "http://introtoapps.com/datastore.php", true);
+			xhttp.timeout = 5000;
+	
+			//Response timed out handler
+			xhttp.ontimeout = function(e){
+				document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Unable to contact remote server.</p>";
+			};
+			
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("action=append&appid=800469543&objectid=users&data=" + encodedData);
+		
+		}
+
+	
+	return true;
+}
+
+//Check if user already exists
+function doesUserExist(){	
+	var xhttp = new XMLHttpRequest();	
+	
+	document.getElementById("newAccountResult").innerHTML="<p>Please wait...</p>";
+	
+	xhttp.onreadystatechange = function(username) {
+		var username = document.getElementById("newuname").value;
+		var usernames;
+		var exists = false;
+		
+		//Successful response handler
+		if (this.readyState == 4 && this.status == 200) {
+			usernames = JSON.parse(xhttp.responseText);
+			for(var i=0; i<usernames.length; ++i){
+				if(usernames[i].username == username){
+					exists = true;
+				}
+			}
+			
+			if(exists == false){
+				createAccount();
+			}
+			else{
+				document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Username already exists.</p>"
+			}
+		}
+		//Unsuccessful response handler
+		if (this.readyState == 4 && this.status == 404) {
+			document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Unable to contact remote server.</p>";
+		}
+	};
+	
+	xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=users", true);
+	xhttp.timeout = 5000;
+	
+	//Response timed out handler
+	xhttp.ontimeout = function(e){
+		document.getElementById("newAccountResult").innerHTML="<p>Failed to create account. Unable to contact remote server.</p>";
+	};
+	xhttp.send();
+	
+	return true;
+}
+
+//Validate user login
+function validateLogin(){	
+	var xhttp = new XMLHttpRequest();	
+	
+	document.getElementById("loginResult").innerHTML="<p>Please wait...</p>";
+	document.getElementById("goToMyCalendar").style.visibility="hidden";
+	
+	xhttp.onreadystatechange = function(username) {
+		var username = document.getElementById("uname").value;
+		var pwd = document.getElementById("pwd").value;
+		//Hash password with SHA-256
+		pwd = rstr_sha256(pwd);
+		var users;
+		var validated = false;
+		
+		//Successful response handler
+		if (this.readyState == 4 && this.status == 200) {
+			users = JSON.parse(xhttp.responseText);
+			for(var i=0; i<users.length; ++i){
+				if(users[i].username == username && users[i].password == pwd){
+					validated = true;
+				}
+			}
+			
+			if(validated == true){
+				document.getElementById("loginResult").innerHTML="<p>Login successful. Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+				document.getElementById("goToMyCalendar").style.visibility="visible";
+				document.getElementById("loggedIn1").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+				document.getElementById("loggedIn2").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+				document.getElementById("loggedIn3").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+				localStorage.setItem('username', username);
+				//Sync events from introtoapps.com/datastore
+				syncFromServer(username);
+			}
+			else{
+				document.getElementById("loginResult").innerHTML="<p>Login failed. Incorrect username or password.</p>";
+			}
+		}
+		//Unsuccessful response handler
+		if (this.readyState == 4 && this.status == 404) {
+			document.getElementById("loginResult").innerHTML="<p>Login failed. Unable to contact remote server.</p>";
+		}
+		
+	};
+	
+	xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=users", true);
+	xhttp.timeout = 5000;
+	
+	//Response timed out handler
+	xhttp.ontimeout = function(e){
+		document.getElementById("loginResult").innerHTML="<p>Login failed. Unable to contact remote server.</p>";
+	};
+	
+	xhttp.send();
+	
+	return true;
+}
+
+//Log user out
+function logOut(){
+	localStorage.removeItem('username');
+	document.getElementById("loggedIn1").innerHTML="";
+	document.getElementById("loggedIn2").innerHTML="";
+	document.getElementById("loggedIn3").innerHTML="";
+}
+
+
+
