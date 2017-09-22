@@ -94,7 +94,7 @@ function createCalendar(){
 
 
 		//Build the calendar HTML
-		var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'><a href='*' onclick='calendar.goToPreviousMonth()' style='color: yellow; text-decoration: none'>&#8678Next</a>&nbsp&nbsp"
+		var calendarBody = "<table class='calendar' align='center'> <tr class='monthNow'><th colspan='7'><a href='#' onclick='calendar.goToPreviousMonth()' style='color: yellow; text-decoration: none'>&#8678Next</a>&nbsp&nbsp"
 			+monthNames[month]+" "+ year +"&nbsp&nbsp<a href='#' onclick='calendar.goToNextMonth()' style='color: yellow; text-decoration: none'>Prev&#8680</a></th></tr>";
 		calendarBody +="<tr>  <td class='dayNames'>Sun</td class='dayNames'>  <td class='dayNames'>Mon</td> <td class='dayNames'>Tue</td>"+
 			"<td class='dayNames'>Wed</td class='dayNames'> <td class='dayNames'>Thu</td> <td class='dayNames'>Fri</td> <td class='dayNames'>Sat</td> </tr>";
@@ -397,33 +397,40 @@ function syncToServer(){
 }
 
 //Sync user events data from introtoapps server
-function syncFromServer(username){	
-	document.getElementById("syncResult").innerHTML="<p>Please wait...</p>";
-	var xhttp = new XMLHttpRequest();
+function syncFromServer(){	
 	
-	xhttp.onreadystatechange = function() {
-		//Successful response handler
-		if (this.readyState == 4 && this.status == 200) {
-			//Put events data into local storage
-			localStorage.setItem('events', xhttp.responseText);
-			document.getElementById("syncResult").innerHTML="<p>Data successfully synced from cloud.</p>";
-		}
-		//Unsuccessful response handler
-		if (this.readyState == 4 && this.status == 404) {
-			document.getElementById("syncResult").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
-		}
-	};
+	try{
+		var username = localStorage.getItem('username');
+		document.getElementById("syncResultFromServer").innerHTML="<p>Please wait...</p>";
+		var xhttp = new XMLHttpRequest();
 	
-	xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=user-" + username, true);
+		xhttp.onreadystatechange = function() {
+			//Successful response handler
+			if (this.readyState == 4 && this.status == 200) {
+				//Put events data into local storage
+				localStorage.setItem('events', xhttp.responseText);
+				document.getElementById("syncResultFromServer").innerHTML="<p>Data successfully synced from cloud.</p>";
+			}
+			//Unsuccessful response handler
+			if (this.readyState == 4 && this.status == 404) {
+				document.getElementById("syncResultFromServer").innerHTML="<p>Failed to sync data. No data stored in cloud.</p>";
+			}
+		};
 	
-	xhttp.timeout = 5000;
+		xhttp.open("GET", "http://introtoapps.com/datastore.php?action=load&appid=800469543&objectid=user-" + username, true);
 	
-	//Response timed out handler
-	xhttp.ontimeout = function(e){
-		document.getElementById("syncResult").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
-	};
+		xhttp.timeout = 5000;
 	
-	xhttp.send();
+		//Response timed out handler
+		xhttp.ontimeout = function(e){
+			document.getElementById("syncResultFromServer").innerHTML="<p>Failed to sync data. Unable to contact remote server.</p>";
+		};
+	
+		xhttp.send();
+	}
+	catch(e){
+		document.getElementById("syncResultFromServer").innerHTML="<p>Failed to sync data. Not logged in.</p>";
+	}
 }
 
 //Creates a user account
@@ -567,9 +574,10 @@ function validateLogin(){
 				document.getElementById("loggedIn1").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
 				document.getElementById("loggedIn2").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
 				document.getElementById("loggedIn3").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+				document.getElementById("alreadyLoggedIn").style.visibility = "visible";
 				localStorage.setItem('username', username);
 				//Sync events from introtoapps.com/datastore
-				syncFromServer(username);
+				//syncFromServer();
 			}
 			else{
 				document.getElementById("loginResult").innerHTML="<p>Login failed. Incorrect username or password.</p>";
@@ -601,6 +609,33 @@ function logOut(){
 	document.getElementById("loggedIn1").innerHTML="";
 	document.getElementById("loggedIn2").innerHTML="";
 	document.getElementById("loggedIn3").innerHTML="";
+	document.getElementById("alreadyLoggedIn").style.visibility = "hidden";
+}
+
+//Check if user is logged in
+function checkLoggedIn(){
+	try{
+		var username = localStorage.getItem('username');
+		username = "" + username;
+		if(username != "null"){
+			document.getElementById("loggedIn1").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+			document.getElementById("loggedIn2").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+			document.getElementById("loggedIn3").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+			document.getElementById("alreadyLoggedIn").style.visibility = "visible";
+		}
+		else{
+			document.getElementById("loggedIn1").innerHTML="";
+			document.getElementById("loggedIn2").innerHTML="";
+			document.getElementById("loggedIn3").innerHTML="";
+			document.getElementById("alreadyLoggedIn").style.visibility = "hidden";
+		}
+	}
+	catch(e){
+		document.getElementById("loggedIn1").innerHTML="";
+		document.getElementById("loggedIn2").innerHTML="";
+		document.getElementById("loggedIn3").innerHTML="";
+		document.getElementById("alreadyLoggedIn").style.visibility = "hidden";
+	}
 }
 
 

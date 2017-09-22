@@ -15,8 +15,8 @@
   <!-- Include SHA-256 script -->
   <script src="js/sha256.js"></script>
 </head>
-<!-- display the calendar on page load -->
-<body onload="calendar.displayCalendar()">
+<!-- display the calendar on page load, and check if user is logged in -->
+<body onload="calendar.displayCalendar(); checkLoggedIn()">
 
 <!-- Login page -->
 <div data-role="page" id="main" data-theme="a">
@@ -30,7 +30,12 @@
 			<a href="#loginResultPopup" onclick="validateLogin()" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Login</a>
 		</form>
 		<a href="#createAccount">Don't have an account yet? Create one now</a>
-		<!-- Displays the result of login -->
+		<div id="alreadyLoggedIn" style="visibility: hidden">
+			<p>Already logged in.</p>
+			<a href="#calendar" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Go to My Calendar</a>
+		</div>
+		
+		<!-- Displays the result of login in popup -->
 		<div data-role="popup" id="loginResultPopup" data-overlay-theme="b" data-dismissible="false" style="min-width:300px;">
 			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 			<div data-role="header">						
@@ -62,7 +67,7 @@
 			<label for="email">Email:</label><input type="text" id="email" value="" />
 			<a href="#newAccountResultPopup" onclick="return doesUserExist()" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-inline ui-corner-all ui-icon-carat-r ui-btn-icon-right">Create Account</a>
 		</form>
-		<!-- Displays the result of login -->
+		<!-- Displays the result of creating account in popup -->
 		<div data-role="popup" id="newAccountResultPopup" data-overlay-theme="b" data-dismissible="false" style="min-width:300px;">
 			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
 			<div data-role="header">						
@@ -97,7 +102,8 @@
 			<div id="loggedIn1">
 			</div>
 		</div>
-	
+		
+		<!-- Sync events to server on click -->
 		<a onclick="return syncToServer()" href="#syncResultPopup" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-inline ui-corner-all ui-icon-refresh ui-btn-icon-left" align="right">Sync</a>
 		<div data-role="popup" id="syncResultPopup" data-overlay-theme="b" data-dismissible="false" style="min-width:300px;">
 			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
@@ -117,12 +123,12 @@
   <div data-role="main" class="ui-content">
 	<!-- div where calendar displays -->
 	<div id="calendarDisplay"></div>
-	<!-- <a href="#calendar" onclick="calendar.goToPreviousMonth()" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all">Previous Month</a>
-	<a href="#calendar" onclick="calendar.goToNextMonth()" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all">Next Month</a> -->
+
   </div>
 
 </div>
 
+<!-- Upcoming events page -->
 <div data-role="page" id="pg1" data-theme="a">
   <div data-role="header">
 	<a href="#myPopup2" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-bars ui-btn-icon-left">Menu</a>
@@ -137,23 +143,21 @@
 				</div>
 			</ul>
 		</div>
-    <h1>My Calendar</h1>
+    <h1>Upcoming Events</h1>
   </div>
 
   
   <div data-role="main" class="ui-content">
-	<!-- Upcoming events test data -->
+	<!-- Upcoming events data -->
 	<div id="upcomingEvents">
 	</div>
 	<div id="displayPage">
 	</div>
   </div> 
   
-  <!--<div data-role="footer">
-    <h1>My Calendar</h1>
-  </div> -->
 </div>
 
+<!-- Settings page -->
 <div data-role="page" id="pg2" data-theme="a">
   <div data-role="header">
     <a href="#myPopup3" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all ui-icon-bars ui-btn-icon-left">Menu</a>
@@ -168,33 +172,35 @@
 				</div>
 			</ul>
 		</div>
-	<h1>My Calendar</h1>
+	<h1>Settings</h1>
   </div>
 
   <div data-role="main" class="ui-content">
-	<!-- <div data-role="controlgroup" data-type="horizontal">
-      <a href="#main" class="ui-btn">Home</a>
-      <a href="#pg1" class="ui-btn">Page 1</a>
-      <a href="" class="ui-btn ui-btn-b">Page 2</a>
-	  <a href="#pg3" class="ui-btn">Page 3</a>
-    </div> -->
-    <p>Settings</p>
+
+	<h3>Restore data from cloud</h3>
+	<hr />
+	<!-- Sync events to server on click -->
+		<a onclick="return syncFromServer()" href="#syncResultFromServerPopup" data-rel="popup" data-position-to="window" class="ui-btn ui-btn-inline ui-corner-all ui-icon-refresh ui-btn-icon-left" align="right">Sync</a>
+		<div data-role="popup" id="syncResultFromServerPopup" data-overlay-theme="b" data-dismissible="false" style="min-width:300px;">
+			<a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+			<div data-role="header">						
+				<h1>Calendar Sync</h1>
+			</div>
+			<div data-role="main" class="ui-content" style="text-align: center;">						
+				<div id="syncResultFromServer">
+						
+				</div>
+			</div>
+		</div>
   </div>
 
-  <!-- <div data-role="footer">
-    <h1>My Calendar</h1>
-  </div> -->
 </div>
 
+<!-- Add Event page -->
 <div data-role="page" id="pg3" data-theme="a">
 	<div data-role="header">
 		<a href="#calendar" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all ui-icon-back ui-btn-icon-left">Back</a>
 		
-		<!-- <div data-role="popup" id="addEventPopup">
-			<input type="text" data-clear-btn="true" id="eventInput" value="" />
-			<a href="#pg3" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" id="eventInputButton">Add</a>
-			<a href="#main" data-rel="button" class="ui-btn ui-btn-inline ui-corner-all" onclick="localStorage.removeItem('events');">Clear all events</a>
-		</div> -->
 		<h1>My Calendar</h1>
 	</div>
 	
@@ -202,9 +208,7 @@
 		<div id="dayEvents">
 			
 		</div>
-		<!-- <div data-role="collapsible"> -->
-			
-		<!-- </div> -->
+
 		<div data-role="collapsible">
 			<h4>Add Event</h4>
 			<input type="text" data-clear-btn="true" id="eventInput" value="" />
