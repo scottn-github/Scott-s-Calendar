@@ -460,7 +460,7 @@ function createAccount(){
 		}
 		else{
 			account = {
-				"username": username,
+				"username": username.toLowerCase(),
 				"password": rstr_sha256(pwd), //Hash password with SHA-256
 				"email": email,
 			};
@@ -474,6 +474,10 @@ function createAccount(){
 				if (this.readyState == 4 && this.status == 200) {
 					document.getElementById("newAccountResult").innerHTML="<p>Account successfully created. Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
 					document.getElementById("goToMyCalendarNewAccount").style.visibility="visible";
+					document.getElementById("loggedIn1").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+					document.getElementById("loggedIn2").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+					document.getElementById("loggedIn3").innerHTML="<p>Logged in as <span style='font-weight: bold'>" + username + "</span>.</p>";
+					document.getElementById("alreadyLoggedIn").style.visibility = "visible";
 					localStorage.setItem('username', username);
 				}
 				//Unsuccessful response handler
